@@ -14,9 +14,9 @@ import {
 } from '@/components/ui/popover';
 import { DateTime } from 'luxon';
 
-export function DatePicker({ date, setDate }) {
+export function DatePicker({ date, setDate, calendarOpen, setCalendarOpen }) {
   return (
-    <Popover>
+    <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
       <PopoverTrigger asChild>
         <Button
           variant={'outline'}
@@ -36,7 +36,6 @@ export function DatePicker({ date, setDate }) {
           onSelect={setDate}
           initialFocus
           disabled={(date) => date < new Date()}
-          // disabled={(date) => date < new Date() || date.getDay() === 0}
         />
       </PopoverContent>
     </Popover>

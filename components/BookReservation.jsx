@@ -60,6 +60,7 @@ export default function BookReservation() {
   const [start, setStart] = useState(''); // holds the string start time in `hh:mm a` format
   const [end, setEnd] = useState(''); // holds the string end time in `hh:mm a` format
   const [endTimes, setEndTimes] = useState([]); // holds the array of possible end times
+  const [calendarOpen, setCalendarOpen] = useState(false); // this is to for closing the popover element in the DatePicker component
 
   // this function gets all the reservations for a given date
   async function getReservationsForDate(date) {
@@ -81,6 +82,7 @@ export default function BookReservation() {
     // Convert to ISO format
     const isoString = dateTime.toISO();
 
+    setCalendarOpen(false);
     setStart('');
     setEnd('');
     setDate(isoString);
@@ -91,7 +93,12 @@ export default function BookReservation() {
   // should I make this component a server component ?
   return (
     <form>
-      <DatePicker date={date} setDate={handleDate} />
+      <DatePicker
+        date={date}
+        setDate={handleDate}
+        calendarOpen={calendarOpen}
+        setCalendarOpen={setCalendarOpen}
+      />
       {date && (
         <Select
           onValueChange={(value) => {
