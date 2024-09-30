@@ -34,7 +34,7 @@ export function DatePicker({ date, setDate, calendarOpen, setCalendarOpen }) {
           mode="single"
           selected={date}
           onSelect={setDate}
-          initialFocus
+          // initialFocus commented out this because datepicker does pop up when clicking it
           disabled={(date) => date < new Date()}
         />
       </PopoverContent>
