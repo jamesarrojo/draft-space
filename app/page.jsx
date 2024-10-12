@@ -3,7 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { createClient } from '@/utils/supabase/server';
 import { createServerClient } from '@supabase/ssr';
 import { redirect } from 'next/navigation';
-
+export const dynamic = 'force-dynamic';
 export default async function Home() {
   const supabase = createClient();
   const { data } = await supabase.auth.getSession();
