@@ -8,7 +8,7 @@ export default function UpdateField({ userId, children }) {
   const router = useRouter();
   async function updateField(id) {
     const res = await fetch(
-      `${process.env.API_URL}:3000/api/students/${id}?action=${children}`,
+      `${process.env.URL}/api/students/${id}?action=${children}`,
       {
         method: 'PUT',
       }

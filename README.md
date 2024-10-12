@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [${process.env.API_URL}:3000](${process.env.API_URL}:3000) with your browser to see the result.
+Open [${process.env.URL}](${process.env.URL}) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 

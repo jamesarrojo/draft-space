@@ -4,9 +4,7 @@ import { columns } from './columns';
 import { DataTable } from './data-table';
 
 async function getStudents() {
-  const data = await fetch(
-    `${process.env.API_URL}:3000/api/students?role=student`
-  ); // there should be no trailing `/`
+  const data = await fetch(`${process.env.URL}/api/students?role=student`); // there should be no trailing `/`
 
   return data.json();
 }

@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 export default function DeleteAccountButton({ userId }) {
   const router = useRouter();
   async function deleteUser(id) {
-    const res = await fetch(`${process.env.API_URL}:3000/api/students/${id}`, {
+    const res = await fetch(`${process.env.URL}/api/students/${id}`, {
       method: 'DELETE',
     });
     const json = await res.json();

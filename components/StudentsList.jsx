@@ -1,7 +1,7 @@
 // delete this
 export default async function StudentsList() {
   async function getStudents() {
-    const data = await fetch(`${process.env.API_URL}:3000/api/students`); // there should be no trailing `/`
+    const data = await fetch(`${process.env.URL}/api/students`); // there should be no trailing `/`
 
     // const students = await data.json();
 

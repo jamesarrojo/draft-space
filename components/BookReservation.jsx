@@ -12,8 +12,7 @@ import {
 import { DateTime } from 'luxon';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Toaster } from './ui/toaster';
-import { DialogTrigger } from '@radix-ui/react-dialog';
+import { DrawerClose } from '@/components/ui/drawer';
 
 // returns an array of time slots that are already booked
 function generateBookedTimes(startTimeStr, endTimeStr) {
@@ -72,7 +71,7 @@ export default function BookReservation({ tableNumber }) {
   // this function gets all the reservations for a given date
   async function getReservationsForDate(date) {
     const data = await fetch(
-      `${process.env.API_URL}:3000/api/reservations?date=${date.slice(
+      `${process.env.URL}/api/reservations?date=${date.slice(
         0,
         10
       )}&tableId=${tableNumber}`
@@ -115,7 +114,7 @@ export default function BookReservation({ tableNumber }) {
       end_time: end,
       table_id: tableNumber,
     };
-    const res = await fetch(`${process.env.API_URL}:3000/api/reservations`, {
+    const res = await fetch(`${process.env.URL}/api/reservations`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newReservation),
@@ -198,7 +197,7 @@ export default function BookReservation({ tableNumber }) {
             </SelectContent>
           </Select>
         )}
-        <DialogTrigger asChild>
+        <DrawerClose>
           <Button
             disabled={!date || !start || !end || isLoading}
             onClick={() => {
@@ -211,7 +210,7 @@ export default function BookReservation({ tableNumber }) {
           >
             Submit
           </Button>
-        </DialogTrigger>
+        </DrawerClose>
       </form>
     </>
   );
