@@ -8,6 +8,7 @@ export async function POST(request) {
   const transaction = await request.json();
   const createdAt = getCurrentPhilippineTime();
   // get supabase instance
+  console.log('CREATED AT', createdAt);
   const supabase = createClient();
 
   // get the current user session ?? NOT needed because we will

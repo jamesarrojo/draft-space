@@ -33,6 +33,7 @@ export async function GET(request) {
   const searchParams = request.nextUrl.searchParams;
   const date = searchParams.get('date');
   const tableId = searchParams.get('tableId');
+  console.log(date, tableId);
   const supabase = await createClient();
   if (date && tableId) {
     const { data, error } = await supabase

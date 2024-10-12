@@ -71,14 +71,17 @@ export default function BookReservation({ tableNumber }) {
 
   // this function gets all the reservations for a given date
   async function getReservationsForDate(date) {
-    const data = await fetch(`http://localhost:3000/api/reservations/${date}`);
+    const data = await fetch(
+      `http://localhost:3000/api/reservations?date=${date.slice(
+        0,
+        10
+      )}&tableId=${tableNumber}`
+    );
 
     const reservations = await data.json();
-
     if (!reservations.data) {
       return [];
     }
-
     // return reservations.data;
     return reservations.data.flatMap(({ start_time, end_time }) =>
       generateBookedTimes(start_time, end_time)
@@ -104,7 +107,6 @@ export default function BookReservation({ tableNumber }) {
   async function handleSubmit(e) {
     setIsLoading(true);
     e.preventDefault();
-
     // maybe add a loading state
 
     const newReservation = {
@@ -113,20 +115,17 @@ export default function BookReservation({ tableNumber }) {
       end_time: end,
       table_id: tableNumber,
     };
-
     const res = await fetch('http://localhost:3000/api/reservations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newReservation),
     });
-
     if (res.status === 201) {
       setIsLoading(false);
       router.refresh();
       // router.push('/')
     }
   }
-
   // should I make this component a server component ?
   return (
     <>
