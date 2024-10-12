@@ -1,5 +1,5 @@
 module.exports = {
   env: {
-    API_URL: 'https://draft-space-lyart.vercel.app',
+    API_URL: 'http://localhost',
   },
 };
