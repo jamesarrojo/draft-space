@@ -8,7 +8,7 @@ export default function UpdateField({ userId, children }) {
   const router = useRouter();
   async function updateField(id) {
     const res = await fetch(
-      `http://localhost:3000/api/students/${id}?action=${children}`,
+      `${process.env.NEXT_PUBLIC_HOST_URL}:3000/api/students/${id}?action=${children}`,
       {
         method: 'PUT',
       }

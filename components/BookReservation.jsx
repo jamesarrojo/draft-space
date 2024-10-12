@@ -72,10 +72,9 @@ export default function BookReservation({ tableNumber }) {
   // this function gets all the reservations for a given date
   async function getReservationsForDate(date) {
     const data = await fetch(
-      `http://localhost:3000/api/reservations?date=${date.slice(
-        0,
-        10
-      )}&tableId=${tableNumber}`
+      `${
+        process.env.NEXT_PUBLIC_HOST_URL
+      }:3000/api/reservations?date=${date.slice(0, 10)}&tableId=${tableNumber}`
     );
 
     const reservations = await data.json();
@@ -115,11 +114,14 @@ export default function BookReservation({ tableNumber }) {
       end_time: end,
       table_id: tableNumber,
     };
-    const res = await fetch('http://localhost:3000/api/reservations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newReservation),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST_URL}:3000/api/reservations`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newReservation),
+      }
+    );
     if (res.status === 201) {
       setIsLoading(false);
       router.refresh();
