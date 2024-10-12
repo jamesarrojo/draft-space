@@ -14,9 +14,7 @@ export default async function Home() {
   }
 
   async function getTables() {
-    const data = await fetch(
-      `${process.env.NEXT_PUBLIC_HOST_URL}:3000/api/tables/`
-    );
+    const data = await fetch(`${process.env.API_URL}:3000/api/tables/`);
 
     const tables = await data.json();
 
