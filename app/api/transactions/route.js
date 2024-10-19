@@ -64,9 +64,11 @@ export async function POST(request) {
     .insert({
       created_at: dateTimeNowStr,
       login_time: dateTimeNowStr,
-      logout_time: DateTime.fromISO(dateTimeNowStr).plus({
-        hours: transaction.hours,
-      }),
+      logout_time: DateTime.fromISO(dateTimeNowStr)
+        .plus({
+          hours: transaction.hours,
+        })
+        .setZone('Asia/Manila'),
       table_number: transaction.table_number,
       student_number: transaction.student_number,
       amount: transaction.amount,
