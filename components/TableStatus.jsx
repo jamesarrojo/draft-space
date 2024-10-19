@@ -21,8 +21,10 @@ import {
 
 import { Button } from './ui/button';
 import BookReservation from './BookReservation';
+import { useState } from 'react';
 
 export default function TableStatus({ tableNumber, isOccupied }) {
+  const [amount, setAmount] = useState(null);
   return (
     <Card>
       <CardHeader>
@@ -41,14 +43,19 @@ export default function TableStatus({ tableNumber, isOccupied }) {
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle>
-                Pick a date to reserve Table {tableNumber}
+                Pick a date to reserve Table {tableNumber}{' '}
+                {amount && `— Total amount to pay is ₱${amount}`}
               </DrawerTitle>
               <DrawerDescription>
                 Payment is via Gcash. Reservation expires after 10 minutes not
                 being paid.
               </DrawerDescription>
             </DrawerHeader>
-            <BookReservation tableNumber={tableNumber} />
+            <BookReservation
+              tableNumber={tableNumber}
+              amount={amount}
+              setAmount={setAmount}
+            />
             <DrawerFooter>
               {/* <Button>Submit</Button> */}
               <DrawerClose>

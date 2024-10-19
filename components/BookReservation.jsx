@@ -17,8 +17,8 @@ import { DrawerClose } from '@/components/ui/drawer';
 // returns an array of time slots that are already booked
 function generateBookedTimes(startTimeStr, endTimeStr) {
   let bookedTimes = [];
-  let currentTime = DateTime.fromFormat(startTimeStr, 'hh:mm a');
-  const endTime = DateTime.fromFormat(endTimeStr, 'hh:mm a');
+  let currentTime = DateTime.fromISO(startTimeStr); // old (when I used the format `06:00 PM`)--> DateTime.fromFormat(startTimeStr, 'hh:mm a');
+  const endTime = DateTime.fromISO(endTimeStr); // old --> DateTime.fromFormat(endTimeStr, 'hh:mm a');
 
   while (currentTime < endTime) {
     bookedTimes.push(currentTime.toFormat('hh:mm a'));
@@ -57,7 +57,20 @@ function getPossibleEndTimes(startTimeStr, reservations) {
   return endTimes;
 }
 
-export default function BookReservation({ tableNumber }) {
+function toISOString(date, time) {
+  // Parse the ISO string
+  const dt = DateTime.fromISO(date);
+
+  // Parse the new 12-hour format time (06:00 PM)
+  const newTime = DateTime.fromFormat(time, 'hh:mm a');
+
+  // Set the new time while keeping the same date and time zone
+  const updatedDt = dt.set({ hour: newTime.hour, minute: newTime.minute });
+
+  return updatedDt.toISO();
+}
+
+export default function BookReservation({ tableNumber, amount, setAmount }) {
   const [date, setDate] = useState(''); // holds the date selected
   const [reservations, setReservations] = useState([]); // holds the the array of booked time slots
   const [start, setStart] = useState(''); // holds the string start time in `hh:mm a` format
@@ -71,7 +84,7 @@ export default function BookReservation({ tableNumber }) {
   // this function gets all the reservations for a given date
   async function getReservationsForDate(date) {
     const data = await fetch(
-      `${process.env.URL}/api/reservations?date=${date.slice(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/reservations?date=${date.slice(
         0,
         10
       )}&tableId=${tableNumber}`
@@ -98,8 +111,10 @@ export default function BookReservation({ tableNumber }) {
     setCalendarOpen(false);
     setStart('');
     setEnd('');
+    setAmount(null);
     setDate(isoString);
     const reservations = await getReservationsForDate(isoString);
+    console.log(reservations);
     setReservations(reservations);
   }
 
@@ -110,15 +125,19 @@ export default function BookReservation({ tableNumber }) {
 
     const newReservation = {
       reservation_date: date,
-      start_time: start,
-      end_time: end,
+      start_time: toISOString(date, start),
+      end_time: toISOString(date, end),
       table_id: tableNumber,
+      amount,
     };
-    const res = await fetch(`${process.env.URL}/api/reservations`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newReservation),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/reservations`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newReservation),
+      }
+    );
     if (res.status === 201) {
       setIsLoading(false);
       router.refresh();
@@ -139,6 +158,7 @@ export default function BookReservation({ tableNumber }) {
           <Select
             onValueChange={(value) => {
               setEnd('');
+              setAmount(null);
               setStart(value);
               // I changed `start` to `value` because I remembered a lesson from Josh
               setEndTimes(getPossibleEndTimes(value, reservations));
@@ -150,12 +170,12 @@ export default function BookReservation({ tableNumber }) {
             </SelectTrigger>
             <SelectContent>
               {startTime.map((time, index) => {
-                if (
-                  DateTime.fromISO(date).weekday >= 6 &&
-                  (index === 0 || index === 11)
-                ) {
-                  return null;
-                }
+                // if (
+                //   DateTime.fromISO(date).weekday >= 6 &&
+                //   (index === 0 || index === 11)
+                // ) {
+                //   return null;
+                // }
                 return (
                   <SelectItem
                     key={time}
@@ -170,18 +190,36 @@ export default function BookReservation({ tableNumber }) {
           </Select>
         )}
         {start && (
-          <Select onValueChange={(value) => setEnd(value)} value={end}>
+          <Select
+            onValueChange={(value) => {
+              const format = 'hh:mm a';
+
+              // Parse the times using the format
+              const dateTime1 = DateTime.fromFormat(start, format);
+              const dateTime2 = DateTime.fromFormat(value, format);
+
+              // Calculate the difference in minutes
+              const diff = dateTime2
+                .diff(dateTime1, ['hours', 'minutes'])
+                .as('hours');
+              const toPay = rate[diff > 8 ? 7 : diff - 1];
+              console.log(diff);
+              setAmount(toPay); // Get the difference in total minutes
+              setEnd(value);
+            }}
+            value={end}
+          >
             <SelectTrigger className="w-[280px]">
               <SelectValue placeholder="Select an end time" />
             </SelectTrigger>
             <SelectContent>
               {endTime.map((time, index) => {
-                if (
-                  DateTime.fromISO(date).weekday >= 6 &&
-                  (index === 0 || index === 11)
-                ) {
-                  return null;
-                }
+                // if (
+                //   DateTime.fromISO(date).weekday >= 6 &&
+                //   (index === 0 || index === 11)
+                // ) {
+                //   return null;
+                // }
                 return (
                   <SelectItem
                     key={time}
@@ -197,14 +235,15 @@ export default function BookReservation({ tableNumber }) {
             </SelectContent>
           </Select>
         )}
-        <DrawerClose>
+        <DrawerClose asChild>
           <Button
             disabled={!date || !start || !end || isLoading}
+            type="submit" // need to add this and the asChild on the `DrawerClose` above.
             onClick={() => {
               toast({
                 title: `Reservation request has been made.`,
                 description:
-                  'Please settle the payment within 10 minutes to confirm reservation',
+                  'Please settle the payment within 10 minutes to confirm reservation, otherwise request will be auto deleted.',
               });
             }}
           >
@@ -233,8 +272,8 @@ const startTime = [
   '03:00 PM',
   '04:00 PM',
   '05:00 PM',
-  '06:00 PM',
-  '07:00 PM',
+  // '06:00 PM',
+  // '07:00 PM',
 ];
 const endTime = [
   '09:00 AM',
@@ -247,6 +286,8 @@ const endTime = [
   '04:00 PM',
   '05:00 PM',
   '06:00 PM',
-  '07:00 PM',
-  '08:00 PM',
+  // '07:00 PM',
+  // '08:00 PM',
 ];
+
+const rate = [45, 85, 130, 175, 215, 260, 305, 350];

@@ -1,31 +1,88 @@
 import { getCurrentPhilippineTime } from '@/utils/dateTimePhilippines';
 import { createClient } from '@/utils/supabase/server';
 import { NextResponse } from 'next/server';
+import { DateTime } from 'luxon';
 
 // [CREATE] transactions
 
 export async function POST(request) {
-  const transaction = await request.json();
-  const createdAt = getCurrentPhilippineTime();
-  // get supabase instance
-  console.log('CREATED AT', createdAt);
+  console.log('START', Date.now());
+  const searchParams = request.nextUrl.searchParams;
+  const action = searchParams.get('action');
+  const dateTimeNowStr = getCurrentPhilippineTime();
   const supabase = createClient();
+  if (action === 'cron') {
+    // checks if there is a Reservation(s) that has to start
+    const { data, error } = await supabase
+      .from('Reservations')
+      .select()
+      .is('is_converted', false)
+      .is('is_paid', true)
+      .lte('start_time', dateTimeNowStr); // returns rows that are `dateTimeNowStr` <= `start_time`
+    // if there is, create a Transaction(s) based on that Reservation(s)
+    if (data.length > 0) {
+      const transactions = data.map((t) => ({
+        created_at: getCurrentPhilippineTime(),
+        login_time: t.start_time,
+        logout_time: t.end_time,
+        table_number: t.table_id,
+        student_number: t.student_id,
+        reservation_id: t.id,
+        amount: t.amount,
+      }));
+      const { error } = await supabase
+        .from('Transactions')
+        .insert(transactions);
+      console.log('ERROR FROM INSERTING TRANSACTION', error);
 
-  // get the current user session ?? NOT needed because we will
-  // get the required data (table_id and student_number) from the Form
+      if (!error) {
+        // updates is_converted to true
+        const reservations = data.map((r) => ({
+          ...r,
+          is_converted: true,
+        }));
+        const { error: reservationsError } = await supabase
+          .from('Reservations')
+          .upsert(reservations);
+        // UPDATES TABLE STATUS TO BE UNAVAILABLE!!! could use a function trigger?!?
+        const { error: tablesError } = await supabase
+          .from('Tables')
+          .upsert(data.map((t) => ({ id: t.table_id, is_occupied: true })));
+        if (reservationsError || tablesError) {
+          return NextResponse.json({ reservationsError, tablesError });
+        }
+      }
+    }
+    console.log('END', Date.now());
+    return NextResponse.json({ data, error });
+  }
+  const transaction = await request.json();
 
-  // insert the data
+  // insert the data from the browser
   const { data, error } = await supabase
     .from('Transactions')
-    .insert({ ...transaction, created_at: createdAt })
+    .insert({
+      created_at: dateTimeNowStr,
+      login_time: dateTimeNowStr,
+      logout_time: DateTime.fromISO(dateTimeNowStr).plus({
+        hours: transaction.hours,
+      }),
+      table_number: transaction.table_number,
+      student_number: transaction.student_number,
+      amount: transaction.amount,
+    })
     .select()
     .single();
-
+  // update table status to be unavailable
+  if (!error) {
+    const { error } = await supabase
+      .from('Tables')
+      .update({ is_occupied: true })
+      .eq('id', data.table_number);
+    if (error) {
+      return NextResponse.json({ error });
+    }
+  }
+  console.log('END2', Date.now());
   return NextResponse.json({ data, error });
 }
-
-// NetNinja made his GET requests in Server Components (?)
-// export async function GET(request) {
-//   const { data } = await supabase.from('Transactions').select();
-//   return JSON.stringify(data);
-// }

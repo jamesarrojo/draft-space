@@ -14,9 +14,12 @@ import DeleteAccountButton from './DeleteAccountButton';
 import UpdateField from './UpdateField';
 function verifyStudent() {}
 async function setAdmin(id) {
-  const res = await fetch(`${process.env.URL}/api/students/${id}`, {
-    method: 'PUT',
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/students/${id}`,
+    {
+      method: 'PUT',
+    }
+  );
   const json = await res.json();
   // console.log({ json });
   if (json.error) {
