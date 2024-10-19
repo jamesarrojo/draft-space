@@ -88,3 +88,19 @@ export async function POST(request) {
   console.log('END2', Date.now());
   return NextResponse.json({ data, error });
 }
+
+// [READ] transactions
+
+export async function GET() {
+  // use RLS to only allow an admin to get ALL the transactions
+  // and only allow students to get transactions they made
+  const supabase = createClient();
+
+  const { data: transactions, error } = await supabase
+    .from('Transactions')
+    .select();
+  if (error) {
+    return NextResponse.json(error);
+  }
+  return NextResponse.json({ transactions });
+}

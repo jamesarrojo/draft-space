@@ -21,3 +21,17 @@ export async function GET(request) {
   const { data, error } = await supabase.from('Students').select();
   return NextResponse.json({ data, error });
 }
+
+export async function POST(request) {
+  const { email, password } = await request.json();
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return NextResponse.json({ error });
+  }
+  return NextResponse.json({ message: 'Login was successful!', data });
+}
