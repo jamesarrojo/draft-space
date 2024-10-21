@@ -14,3 +14,11 @@ export async function PUT(_, { params }) {
     .eq('id', id);
   return NextResponse.json({ error });
 }
+export async function DELETE(_, { params }) {
+  const id = params.id;
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.from('Reservations').delete().eq('id', id);
+  return NextResponse.json({ error });
+}
