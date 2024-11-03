@@ -14,3 +14,16 @@ export async function DELETE(_, { params }) {
     .eq('id', id);
   return NextResponse.json({ error });
 }
+
+export async function PUT(request, { params }) {
+  const id = params.id;
+  const item = await request.json();
+
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from('Redeemable_Items')
+    .update({ ...item })
+    .eq('id', id);
+  return NextResponse.json({ error });
+}
