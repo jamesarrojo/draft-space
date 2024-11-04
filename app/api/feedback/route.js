@@ -7,7 +7,7 @@ export async function POST(request) {
   const createdAt = getCurrentPhilippineTime();
   const feedback = await request.json();
 
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('Feedback')
     .insert({
@@ -18,8 +18,9 @@ export async function POST(request) {
     .single();
   return NextResponse.json({ data, error });
 }
-// export async function GET() {
-//   const supabase = await createClient();
-//   const { data, error } = await supabase.from('Redeemable_Items').select();
-//   return NextResponse.json({ data, error });
-// }
+
+export async function GET() {
+  const supabase = createClient();
+  const { data, error } = await supabase.from('Feedback').select();
+  return NextResponse.json({ data, error });
+}
