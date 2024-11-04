@@ -1,6 +1,5 @@
 import { getCurrentPhilippineTime } from '@/utils/dateTimePhilippines';
 import { createClient } from '@/utils/supabase/server';
-import { DateTime } from 'luxon';
 import { NextResponse } from 'next/server';
 
 export async function POST(request) {
@@ -21,6 +20,6 @@ export async function POST(request) {
 
 export async function GET() {
   const supabase = createClient();
-  const { data, error } = await supabase.from('Feedback').select();
+  const { data, error } = await supabase.from('Redemptions').select();
   return NextResponse.json({ data, error });
 }
