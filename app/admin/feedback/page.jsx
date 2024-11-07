@@ -1,8 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 export const dynamic = 'force-dynamic';
-
-export default async function Reservations() {
+export default async function Feedback() {
   const supabase = createClient();
   const { data: activeSession } = await supabase.auth.getSession();
 
@@ -22,5 +21,5 @@ export default async function Reservations() {
   if (user?.role === 'student') {
     redirect('/');
   }
-  return <h1>Reservations</h1>;
+  return <div>Feedback</div>;
 }

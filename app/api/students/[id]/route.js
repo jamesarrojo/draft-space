@@ -27,10 +27,27 @@ export async function PUT(request, { params }) {
   const id = params.id;
   const supabase = createClient();
   if (action === 'Set admin') {
-    const { error } = await supabase
-      .from('Students')
-      .update({ role: 'admin' })
-      .eq('supabase_id', id);
+    const supabaseAdmin = createClientAdmin(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ADMIN_KEY,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
+    const { user, error } = await supabaseAdmin.auth.updateUser({
+      data: { role: 'admin' },
+    });
+    if (!error) {
+      console.log('USERR!', user);
+      const { error } = await supabase
+        .from('Students')
+        .update({ role: 'admin' })
+        .eq('supabase_id', id);
+      return NextResponse.json({ error });
+    }
 
     return NextResponse.json({ error });
   }
