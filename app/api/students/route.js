@@ -18,6 +18,19 @@ export async function GET(request) {
     }
     return NextResponse.json({ data, error });
   }
+  if (role === 'verified-student') {
+    const { data, error } = await supabase
+      .from('Students')
+      .select()
+      .match({ role: 'student', is_verified: true });
+
+    if (error) {
+      console.error('Error getting user:', error);
+      return null;
+    }
+    return NextResponse.json({ data, error });
+  }
+
   const { data, error } = await supabase.from('Students').select();
   return NextResponse.json({ data, error });
 }

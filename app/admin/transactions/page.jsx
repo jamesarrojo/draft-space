@@ -1,6 +1,17 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { columns } from './columns';
+import { DataTable } from './data-table';
+import AddTransaction from './AddTransaction';
 export const dynamic = 'force-dynamic';
+
+async function getTransactions() {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/transactions`
+  );
+
+  return data.json();
+}
 
 export default async function Transactions() {
   const supabase = createClient();
@@ -22,5 +33,13 @@ export default async function Transactions() {
   if (user?.role === 'student') {
     redirect('/');
   }
-  return <div>Transactions</div>;
+
+  const { transactions } = await getTransactions();
+
+  return (
+    <div className="container mx-auto py-10">
+      <AddTransaction />
+      <DataTable data={transactions} columns={columns} />
+    </div>
+  );
 }

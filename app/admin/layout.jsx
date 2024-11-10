@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 // import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { Toaster } from '@/components/ui/toaster';
 
 // components
 import Navbar from '@/components/Navbar';
@@ -18,6 +19,7 @@ export default async function DashboardLayout({ children }) {
     <>
       <Navbar user={data.session.user} />
       {children}
+      <Toaster />
     </>
   );
 }

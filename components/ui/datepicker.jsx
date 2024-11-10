@@ -16,7 +16,9 @@ import { DateTime } from 'luxon';
 
 export function DatePicker({ date, setDate, calendarOpen, setCalendarOpen }) {
   return (
-    <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+    // fixed the datepicker not picking any date by using `modal={true}
+    // from this: https://github.com/shadcn-ui/ui/issues/910#issuecomment-2007924837
+    <Popover open={calendarOpen} onOpenChange={setCalendarOpen} modal={true}>
       <PopoverTrigger asChild>
         <Button
           variant={'outline'}
@@ -34,6 +36,7 @@ export function DatePicker({ date, setDate, calendarOpen, setCalendarOpen }) {
           mode="single"
           selected={date}
           onSelect={setDate}
+          initialFocus
           // initialFocus commented out this because datepicker does pop up when clicking it
           disabled={(date) => date < new Date()}
         />

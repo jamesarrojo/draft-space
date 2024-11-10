@@ -11,6 +11,20 @@ export async function POST(request) {
   const action = searchParams.get('action');
   const dateTimeNowStr = getCurrentPhilippineTime();
   const supabase = createClient();
+
+  async function getEmail(id) {
+    const supabase = createClient();
+    const {
+      data: { email },
+      error,
+    } = await supabase
+      .from('Students')
+      .select('email')
+      .single()
+      .eq('supabase_id', id);
+    console.log('EMAILLL', email);
+    return email;
+  }
   if (action === 'cron') {
     // checks if there is a Reservation(s) that has to start
     const { data, error } = await supabase
@@ -29,6 +43,7 @@ export async function POST(request) {
         student_number: t.student_id,
         reservation_id: t.id,
         amount: t.amount,
+        student_email: t.student_email,
       }));
       const { error } = await supabase
         .from('Transactions')
@@ -48,8 +63,19 @@ export async function POST(request) {
         const { error: tablesError } = await supabase
           .from('Tables')
           .upsert(data.map((t) => ({ id: t.table_id, is_occupied: true })));
-        if (reservationsError || tablesError) {
-          return NextResponse.json({ reservationsError, tablesError });
+
+        // UPDATES STATUS OF STUDENT TO HAVE A TABLE
+        const { error: studentsError } = await supabase
+          .from('Students')
+          .upsert(
+            data.map((s) => ({ supabase_id: s.student_id, has_table: true }))
+          );
+        if (reservationsError || tablesError || studentsError) {
+          return NextResponse.json({
+            reservationsError,
+            tablesError,
+            studentsError,
+          });
         }
       }
     }
@@ -72,17 +98,22 @@ export async function POST(request) {
       table_number: transaction.table_number,
       student_number: transaction.student_number,
       amount: transaction.amount,
+      student_email: await getEmail(transaction.student_number),
     })
     .select()
     .single();
   // update table status to be unavailable
   if (!error) {
-    const { error } = await supabase
+    const { error: tablesError } = await supabase
       .from('Tables')
       .update({ is_occupied: true })
       .eq('id', data.table_number);
+    const { error: studentsError } = await supabase
+      .from('Students')
+      .update({ has_table: true })
+      .eq('supabase_id', data.student_number);
     if (error) {
-      return NextResponse.json({ error });
+      return NextResponse.json({ tablesError, studentsError });
     }
   }
   console.log('END2', Date.now());

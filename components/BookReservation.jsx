@@ -145,6 +145,7 @@ export default function BookReservation({ tableNumber, amount, setAmount }) {
     }
   }
   // should I make this component a server component ?
+  console.log({ date });
   return (
     <>
       <form onSubmit={handleSubmit}>

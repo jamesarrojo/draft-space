@@ -19,6 +19,7 @@ export async function POST(request) {
       ...reservation,
       created_at: createdAt,
       student_id: user.id,
+      student_email: user.email,
     })
     .select()
     .single();
