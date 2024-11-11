@@ -135,3 +135,50 @@ export async function GET() {
   }
   return NextResponse.json({ transactions });
 }
+
+// [UPDATE] transactions
+
+export async function PUT(request) {
+  const searchParams = request.nextUrl.searchParams;
+  const action = searchParams.get('action');
+  const dateTimeNowStr = getCurrentPhilippineTime();
+  const supabase = createClient();
+
+  if (action === 'cron') {
+    // checks if there are Transaction(s) to be marked as completed and mark them
+    const { data, error } = await supabase
+      .from('Transactions')
+      .update({ status: 'completed' })
+      .select()
+      .eq('status', 'active')
+      .is('is_paid', true)
+      .lte('logout_time', dateTimeNowStr);
+
+    if (!error) {
+      // UPDATES TABLE STATUS TO BE AVAILABLE AGAIN
+      const { error: tablesError } = await supabase
+        .from('Tables')
+        .update({ is_occupied: false })
+        .in(
+          'id',
+          data.map((t) => t.table_number)
+        );
+
+      // UPDATES STATUS OF STUDENT TO NOT HAVE A TABLE
+      const { error: studentsError } = await supabase
+        .from('Students')
+        .update({ has_table: false })
+        .in(
+          'supabase_id',
+          data.map((t) => t.student_number)
+        );
+      if (tablesError || studentsError) {
+        return NextResponse.json({
+          tablesError,
+          studentsError,
+        });
+      }
+    }
+    return NextResponse.json({ data, error });
+  }
+}
