@@ -79,7 +79,11 @@ export const columns = [
     accessorKey: 'reservation_id',
     header: 'Reservation ID',
     cell: (row) => (
-      <div>{row.getValue('reservation_id') ? row : '(walk-in)'}</div>
+      <div>
+        {row.getValue('reservation_id')
+          ? row.getValue('reservation_id')
+          : '(walk-in)'}
+      </div>
     ),
   },
   {

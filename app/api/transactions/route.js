@@ -63,13 +63,19 @@ export async function POST(request) {
         // UPDATES TABLE STATUS TO BE UNAVAILABLE!!! could use a function trigger?!?
         const { error: tablesError } = await supabase
           .from('Tables')
-          .upsert(data.map((t) => ({ id: t.table_id, is_occupied: true })));
+          .update({ is_occupied: true })
+          .in(
+            'id',
+            data.map((t) => t.table_id)
+          );
 
         // UPDATES STATUS OF STUDENT TO HAVE A TABLE
         const { error: studentsError } = await supabase
           .from('Students')
-          .upsert(
-            data.map((s) => ({ supabase_id: s.student_id, has_table: true }))
+          .update({ has_table: true })
+          .in(
+            'supabase_id',
+            data.map((t) => t.student_id)
           );
         if (reservationsError || tablesError || studentsError) {
           return NextResponse.json({
@@ -178,6 +184,8 @@ export async function PUT(request) {
       // INCREMENTS student's points_balance after a transaction has a status of `completed`
       // created a stored procedure using this guide
       // https://github.com/orgs/supabase/discussions/909
+      // also finally got a query that matches what I need thanks to ChatGPT:
+      // https://chatgpt.com/share/67335ed6-4ee4-800f-a401-2433aa4dd2b3
       const { error: incrementError } = await supabase.rpc('increment', {
         student_ids: data.map((t) => t.student_number),
         transaction_ids: data.map((t) => t.id),
