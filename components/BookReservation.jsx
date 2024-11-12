@@ -78,6 +78,7 @@ export default function BookReservation({ tableNumber, amount, setAmount }) {
   const [endTimes, setEndTimes] = useState([]); // holds the array of possible end times
   const [calendarOpen, setCalendarOpen] = useState(false); // this is to for closing the popover element in the DatePicker component
   const [isLoading, setIsLoading] = useState(false);
+  const [hours, setHours] = useState(undefined);
 
   const { toast } = useToast();
 
@@ -128,6 +129,7 @@ export default function BookReservation({ tableNumber, amount, setAmount }) {
       start_time: toISOString(date, start),
       end_time: toISOString(date, end),
       table_id: tableNumber,
+      hours,
       amount,
     };
     const res = await fetch(
@@ -204,7 +206,8 @@ export default function BookReservation({ tableNumber, amount, setAmount }) {
                 .diff(dateTime1, ['hours', 'minutes'])
                 .as('hours');
               const toPay = rate[diff > 8 ? 7 : diff - 1];
-              console.log(diff);
+              console.log('DIFF', diff);
+              setHours(diff);
               setAmount(toPay); // Get the difference in total minutes
               setEnd(value);
             }}

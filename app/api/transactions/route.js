@@ -42,6 +42,7 @@ export async function POST(request) {
         table_number: t.table_id,
         student_number: t.student_id,
         reservation_id: t.id,
+        hours: t.hours,
         amount: t.amount,
         student_email: t.student_email,
       }));
@@ -97,6 +98,7 @@ export async function POST(request) {
         .setZone('Asia/Manila'),
       table_number: transaction.table_number,
       student_number: transaction.student_number,
+      hours: transaction.hours,
       amount: transaction.amount,
       student_email: await getEmail(transaction.student_number),
     })
@@ -172,10 +174,20 @@ export async function PUT(request) {
           'supabase_id',
           data.map((t) => t.student_number)
         );
-      if (tablesError || studentsError) {
+
+      // INCREMENTS student's points_balance after a transaction has a status of `completed`
+      // created a stored procedure using this guide
+      // https://github.com/orgs/supabase/discussions/909
+      const { error: incrementError } = await supabase.rpc('increment', {
+        student_ids: data.map((t) => t.student_number),
+        transaction_ids: data.map((t) => t.id),
+      });
+
+      if (tablesError || studentsError || incrementError) {
         return NextResponse.json({
           tablesError,
           studentsError,
+          incrementError,
         });
       }
     }
