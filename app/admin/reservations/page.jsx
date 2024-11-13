@@ -1,6 +1,16 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { columns } from './columns';
+import { DataTable } from './data-table';
 export const dynamic = 'force-dynamic';
+
+async function getReservations() {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/reservations`
+  );
+
+  return data.json();
+}
 
 export default async function Reservations() {
   const supabase = createClient();
@@ -22,5 +32,12 @@ export default async function Reservations() {
   if (user?.role === 'student') {
     redirect('/');
   }
-  return <h1>Reservations</h1>;
+
+  const { data } = await getReservations();
+
+  return (
+    <div className="container mx-auto py-10">
+      <DataTable data={data} columns={columns} />
+    </div>
+  );
 }
