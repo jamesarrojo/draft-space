@@ -25,6 +25,11 @@ export default async function Home() {
     redirect('/admin/transactions');
   }
 
+  // if user is not verfied and a student redirect to /please-verify
+  if (user?.role === 'student' && !user?.is_verified) {
+    redirect('/please-verify');
+  }
+
   async function getTables() {
     const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tables/`);
 
