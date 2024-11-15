@@ -1,3 +1,4 @@
+// moved from app/
 import TableStatus from '@/components/TableStatus';
 import { Toaster } from '@/components/ui/toaster';
 import { createClient } from '@/utils/supabase/server';

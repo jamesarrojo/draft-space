@@ -25,10 +25,7 @@ export default async function DashboardLayout({ children }) {
 }
 
 const menuItems = [
-  { route: '/admin/transactions', label: 'Transactions' },
-  { route: '/admin/reservations', label: 'Reservations' },
-  { route: '/admin/students', label: 'Students' },
-  { route: '/admin/items', label: 'Items' },
-  { route: '/admin/redemptions', label: 'Redemptions' },
-  { route: '/admin/feedback', label: 'Feedback' },
+  { route: '/transactions-history', label: 'Transactions History' },
+  { route: '/redeem-items', label: 'Redeem Items' },
+  { route: '/redemptions-history', label: 'Redemptions History' },
 ];

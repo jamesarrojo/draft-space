@@ -16,20 +16,30 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 
-export default function Navbar({ user }) {
+export default function Navbar({ user, menuItems }) {
   return (
     <nav>
-      <Image
-        src={Logo}
-        alt="DraftSpace logo"
-        width={150}
-        // placeholder="blur"
-        quality={100}
-      />
-      {/* <h1>Dojo Helpdesk</h1> */}
+      <Link href="/">
+        <Image
+          src={Logo}
+          alt="DraftSpace logo"
+          width={150}
+          // placeholder="blur"
+          quality={100}
+        />
+      </Link>
       <NavigationMenu>
         <NavigationMenuList>
-          <NavigationMenuItem>
+          {menuItems.map(({ route, label }) => (
+            <NavigationMenuItem key={route}>
+              <Link href={route} legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  {label}
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          ))}
+          {/* <NavigationMenuItem>
             <Link href="/admin/transactions" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Transactions
@@ -70,7 +80,7 @@ export default function Navbar({ user }) {
                 Feedback
               </NavigationMenuLink>
             </Link>
-          </NavigationMenuItem>
+          </NavigationMenuItem> */}
         </NavigationMenuList>
       </NavigationMenu>
       {user && <span>Hello, {user.email}</span>}
