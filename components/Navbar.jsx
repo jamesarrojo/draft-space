@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Logo from './default-monochrome-black.svg';
-// import LogoutButton from './LogoutButton';
+import LogoutButton from './LogoutButton';
 
 // shadcn
 import {
@@ -15,8 +15,20 @@ import {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
+import { createClient } from '@/utils/supabase/server';
 
-export default function Navbar({ user, menuItems }) {
+export default async function Navbar({ user, menuItems }) {
+  // get student points balance
+  async function fetchPoints(email) {
+    const supabase = createClient();
+    const {
+      data: { points_balance: points, role },
+      error,
+    } = await supabase.from('Students').select().eq('email', email).single();
+    return { points, role };
+  }
+
+  const { points, role } = await fetchPoints(user.email);
   return (
     <nav>
       <Link href="/">
@@ -39,52 +51,11 @@ export default function Navbar({ user, menuItems }) {
               </Link>
             </NavigationMenuItem>
           ))}
-          {/* <NavigationMenuItem>
-            <Link href="/admin/transactions" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Transactions
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/admin/reservations" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Reservations
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/admin/students" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Students
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/admin/items" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Items
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/admin/redemptions" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Redemptions
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/admin/feedback" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Feedback
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem> */}
         </NavigationMenuList>
       </NavigationMenu>
+      {role === 'student' && <span>Points: {points}</span>}
       {user && <span>Hello, {user.email}</span>}
-      {/* <LogoutButton /> */}
+      <LogoutButton />
     </nav>
   );
 }
