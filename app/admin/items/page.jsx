@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import ItemCard from './ItemCard';
 export const dynamic = 'force-dynamic';
 
 export default async function Items() {
@@ -22,5 +23,33 @@ export default async function Items() {
   if (user?.role === 'student') {
     redirect('/');
   }
-  return <div>Items</div>;
+
+  async function getItems() {
+    const supabase = createClient();
+    const { data, error } = await supabase.from('Redeemable_Items').select();
+    if (error) {
+      return error;
+    }
+    return data;
+  }
+
+  const items = await getItems();
+
+  return (
+    <div>
+      {items.map(
+        ({ name, image_url, is_available, description, point_cost, id }) => (
+          <ItemCard
+            key={id}
+            id={id}
+            name={name}
+            imageUrl={image_url}
+            isAvailable={is_available}
+            description={description}
+            pointsCost={point_cost}
+          />
+        )
+      )}
+    </div>
+  );
 }
