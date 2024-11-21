@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import ItemCard from './ItemCard';
+import AddItem from './AddItem';
 export const dynamic = 'force-dynamic';
 
 export default async function Items() {
@@ -37,6 +38,7 @@ export default async function Items() {
 
   return (
     <div>
+      <AddItem />
       {items.map(
         ({ name, image_url, is_available, description, point_cost, id }) => (
           <ItemCard

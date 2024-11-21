@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import ToggleAvailability from './ToggleAvailability';
+import DeleteItem from './DeleteItem';
 
 export default function ItemCard({
   name,
@@ -37,6 +38,7 @@ export default function ItemCard({
         <ToggleAvailability id={id}>
           {isAvailable ? 'Make Unavailable' : 'Make Available'}
         </ToggleAvailability>
+        <DeleteItem id={id}>Delete</DeleteItem>
       </CardFooter>
     </Card>
   );

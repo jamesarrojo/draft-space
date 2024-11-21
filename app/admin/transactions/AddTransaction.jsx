@@ -124,7 +124,9 @@ export default function AddTransaction() {
   console.log(process.env.NODE_ENV, process.env.NODE_ENV === 'development');
   return (
     <Sheet>
-      <SheetTrigger>New Transaction</SheetTrigger>
+      <SheetTrigger asChild>
+        <Button>New Transaction</Button>
+      </SheetTrigger>
       <SheetContent side="left">
         <form onSubmit={handleSubmit}>
           <SheetHeader>
