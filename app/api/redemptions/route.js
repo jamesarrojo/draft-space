@@ -29,6 +29,17 @@ export async function POST(request) {
 
 export async function GET() {
   const supabase = createClient();
-  const { data, error } = await supabase.from('Redemptions').select();
-  return NextResponse.json({ data, error });
+  const { data, error } = await supabase
+    .from('Redemptions')
+    .select(`*, Redeemable_Items (name), Students (email)`); // this is how you JOIN(?) in supabase
+  if (!error) {
+    const redemptionsData = data.map(
+      ({ Redeemable_Items, Students, ...rest }) => ({
+        item_name: Redeemable_Items?.name,
+        student_email: Students?.email,
+        ...rest,
+      })
+    );
+    return NextResponse.json({ redemptionsData, error });
+  }
 }

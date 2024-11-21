@@ -1,6 +1,16 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { DataTable } from './data-table';
+import { columns } from './columns';
 export const dynamic = 'force-dynamic';
+
+async function getRedemptions() {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/redemptions`
+  );
+
+  return data.json();
+}
 
 export default async function Redemptions() {
   const supabase = createClient();
@@ -22,5 +32,11 @@ export default async function Redemptions() {
   if (user?.role === 'student') {
     redirect('/');
   }
-  return <div>Redemptions</div>;
+
+  const { redemptionsData } = await getRedemptions();
+  return (
+    <div className="container mx-auto py-10">
+      <DataTable data={redemptionsData} columns={columns} />
+    </div>
+  );
 }
