@@ -25,9 +25,9 @@ export default function FeedbackCard({
       <CardHeader>
         <CardTitle>
           {isApproved ? (
-            <FaRegSmile color="green" />
+            <FaRegSmile className="text-green-600" />
           ) : (
-            <FaRegSadTear color="red" />
+            <FaRegSadTear className="text-red-600" />
           )}{' '}
           {email}
         </CardTitle>
