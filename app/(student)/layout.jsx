@@ -28,4 +28,5 @@ const menuItems = [
   { route: '/transactions-history', label: 'Transactions History' },
   { route: '/redeem-items', label: 'Redeem Items' },
   { route: '/redemptions-history', label: 'Redemptions History' },
+  { route: '/send-feedback', label: 'Send Feedback' },
 ];
