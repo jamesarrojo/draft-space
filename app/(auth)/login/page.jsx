@@ -35,9 +35,12 @@ export default function Register() {
     }
   }
   return (
-    <>
-      <h1 className="text-center">Login</h1>
-      <form onSubmit={(e) => handleSubmit(e, email, password)}>
+    <div className="flex flex-col gap-8 mt-8 ">
+      <h1 className="text-center text-2xl">Login</h1>
+      <form
+        onSubmit={(e) => handleSubmit(e, email, password)}
+        className="flex flex-col gap-4 lg:w-1/5 self-center"
+      >
         <Input
           type="email"
           placeholder="Email"
@@ -55,6 +58,6 @@ export default function Register() {
         <Button>Submit</Button>
       </form>
       {error && <p>{error}</p>}
-    </>
+    </div>
   );
 }

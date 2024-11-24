@@ -54,8 +54,8 @@ export default function Register() {
     }
   }
   return (
-    <>
-      <h1 className="text-center">Register</h1>
+    <div className="flex flex-col gap-8 mt-8 ">
+      <h1 className="text-center text-2xl">Register</h1>
       <form
         onSubmit={(e) =>
           handleSubmit(
@@ -67,6 +67,7 @@ export default function Register() {
             studentNumber.trim()
           )
         }
+        className="flex flex-col gap-4 lg:w-1/5 self-center"
       >
         <Input
           type="text"
@@ -109,6 +110,6 @@ export default function Register() {
         <Button>Submit</Button>
       </form>
       {error && <p>{error}</p>}
-    </>
+    </div>
   );
 }
