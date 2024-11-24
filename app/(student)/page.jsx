@@ -43,8 +43,6 @@ export default async function Home() {
 
   return (
     <main>
-      <h1>DraftSpace</h1>
-      {/* {data.session.user.email} */}
       {tables.map(({ id, is_occupied }) => (
         <TableStatus key={id} tableNumber={id} isOccupied={is_occupied} />
       ))}
