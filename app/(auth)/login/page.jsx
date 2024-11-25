@@ -57,7 +57,7 @@ export default function Register() {
         />
         <Button>Submit</Button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="text-center text-red-600">{error}.</p>}
     </div>
   );
 }
