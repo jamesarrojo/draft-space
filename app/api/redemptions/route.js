@@ -48,7 +48,8 @@ export async function GET() {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('Redemptions')
-    .select(`*, Redeemable_Items (name), Students (email)`); // this is how you JOIN(?) in supabase
+    .select(`*, Redeemable_Items (name), Students (email)`)
+    .order('created_at', { ascending: false }); // this is how you JOIN(?) in supabase
   if (!error) {
     const redemptionsData = data.map(
       ({ Redeemable_Items, Students, ...rest }) => ({

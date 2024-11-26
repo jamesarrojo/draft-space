@@ -21,6 +21,9 @@ export async function POST(request) {
 
 export async function GET() {
   const supabase = createClient();
-  const { data, error } = await supabase.from('Feedback').select();
+  const { data, error } = await supabase
+    .from('Feedback')
+    .select()
+    .order('created_at', { ascending: false });
   return NextResponse.json({ data, error });
 }

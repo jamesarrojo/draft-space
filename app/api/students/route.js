@@ -5,12 +5,13 @@ export async function GET(request) {
   const searchParams = request.nextUrl.searchParams;
   const role = searchParams.get('role');
 
-  const supabase = await createClient();
+  const supabase = createClient();
   if (role === 'student') {
     const { data, error } = await supabase
       .from('Students')
       .select()
-      .eq('role', role);
+      .eq('role', role)
+      .order('email', { ascending: true });
 
     if (error) {
       console.error('Error getting user:', error);
@@ -22,7 +23,8 @@ export async function GET(request) {
     const { data, error } = await supabase
       .from('Students')
       .select()
-      .match({ role: 'student', is_verified: true });
+      .match({ role: 'student', is_verified: true })
+      .order('email', { ascending: true });
 
     if (error) {
       console.error('Error getting user:', error);
@@ -31,7 +33,10 @@ export async function GET(request) {
     return NextResponse.json({ data, error });
   }
 
-  const { data, error } = await supabase.from('Students').select();
+  const { data, error } = await supabase
+    .from('Students')
+    .select()
+    .order('email', { ascending: true });
   return NextResponse.json({ data, error });
 }
 

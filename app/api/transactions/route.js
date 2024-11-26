@@ -136,7 +136,8 @@ export async function GET() {
 
   const { data: transactions, error } = await supabase
     .from('Transactions')
-    .select();
+    .select()
+    .order('created_at', { ascending: false });
   if (error) {
     return NextResponse.json(error);
   }

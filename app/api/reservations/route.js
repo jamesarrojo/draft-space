@@ -36,7 +36,7 @@ export async function GET(request) {
   const date = searchParams.get('date');
   const tableId = searchParams.get('tableId');
   console.log(date, tableId);
-  const supabase = await createClient();
+  const supabase = createClient();
   if (date && tableId) {
     const { data, error } = await supabase
       .from('Reservations')
@@ -45,7 +45,11 @@ export async function GET(request) {
       .like('reservation_date', `%${date}%`);
     return NextResponse.json({ data, error });
   }
-  const { data, error } = await supabase.from('Reservations').select();
+  const { data, error } = await supabase
+    .from('Reservations')
+    .select()
+    .order('created_at', { ascending: false });
+  console.log('SORTED', data);
   return NextResponse.json({ data, error });
 }
 

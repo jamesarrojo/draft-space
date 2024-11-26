@@ -27,7 +27,8 @@ export default async function Feedback() {
     const supabase = createClient();
     const { data, error } = await supabase
       .from('Feedback')
-      .select('*, Students (email)');
+      .select('*, Students (email)')
+      .order('created_at', { ascending: false });
     if (error) {
       return error;
     }

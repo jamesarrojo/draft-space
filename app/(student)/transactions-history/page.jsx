@@ -35,7 +35,8 @@ export default async function TransactionsHistory() {
     const { data, error } = await supabase
       .from('Transactions')
       .select()
-      .eq('student_number', studentId);
+      .eq('student_number', studentId)
+      .order('created_at', { ascending: false });
     if (error) {
       return error;
     }

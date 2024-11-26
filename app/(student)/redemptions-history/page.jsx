@@ -36,7 +36,8 @@ export default async function RedemptionsHistory() {
     const { data, error } = await supabase
       .from('Redemptions')
       .select('*, Redeemable_Items (name)')
-      .eq('student_id', studentId);
+      .eq('student_id', studentId)
+      .order('created_at', { ascending: false });
     if (error) {
       return error;
     }
