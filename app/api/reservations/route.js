@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request) {
   const createdAt = getCurrentPhilippineTime();
   const reservation = await request.json();
-  const supabase = await createClient();
+  const supabase = createClient();
 
   // get current user session
   const {
@@ -55,8 +55,10 @@ export async function DELETE(request) {
   const action = searchParams.get('action');
   if (action === 'cron') {
     const supabase = createClient();
-    const timeNow = getCurrentPhilippineTime();
-    const timeTenMinsAgo = DateTime.fromISO(timeNow).minus({ minutes: 10 });
+    const timeTenMinsAgo = DateTime.now()
+      .setZone('Asia/Manila')
+      .minus({ minutes: 10 })
+      .toISO();
     const { data, error } = await supabase
       .from('Reservations')
       .select()
