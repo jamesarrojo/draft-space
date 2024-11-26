@@ -80,7 +80,7 @@ export default async function Home() {
       </h2>
       <div className="grid md:grid-rows-4 md:grid-cols-4 md:grid-flow-col gap-4">
         {tables.map(({ id, is_occupied }) => (
-          <TableStatus key={id} tableNumber={id} isOccupied={is_occupied} />
+          <TableStatus key={id} tableNumber={id} />
         ))}
       </div>
       <Toaster />

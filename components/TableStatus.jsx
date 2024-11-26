@@ -23,7 +23,7 @@ import { Button } from './ui/button';
 import BookReservation from './BookReservation';
 import { useState } from 'react';
 
-export default function TableStatus({ tableNumber, isOccupied }) {
+export default function TableStatus({ tableNumber }) {
   const [amount, setAmount] = useState(null);
   return (
     <Card className="flex flex-col px-2">
@@ -32,9 +32,6 @@ export default function TableStatus({ tableNumber, isOccupied }) {
           Table {tableNumber}
         </CardTitle>
       </CardHeader>
-      <CardContent className="text-center">
-        <p>{isOccupied ? '🔴 Occupied' : '🟢 Available'}</p>
-      </CardContent>
       <CardFooter>
         <Drawer>
           <DrawerTrigger asChild>
