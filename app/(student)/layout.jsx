@@ -21,7 +21,7 @@ export default async function DashboardLayout({ children }) {
       <div className="flex-1">{children}</div>
       <Toaster />
       <footer className="text-center text-xs p-4 border mt-16">
-        <p>© {new Date().getFullYear()} DraftSpace Inc. All Rights Reserved.</p>
+        <p>© {new Date().getFullYear()} DraftSpace. All Rights Reserved.</p>
       </footer>
     </div>
   );
