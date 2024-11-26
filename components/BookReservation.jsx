@@ -122,7 +122,6 @@ export default function BookReservation({ tableNumber, amount, setAmount }) {
   async function handleSubmit(e) {
     setIsLoading(true);
     e.preventDefault();
-    // maybe add a loading state
 
     const newReservation = {
       reservation_date: date,
@@ -140,17 +139,20 @@ export default function BookReservation({ tableNumber, amount, setAmount }) {
         body: JSON.stringify(newReservation),
       }
     );
-    if (res.status === 201) {
+
+    if (res.status === 200) {
+      toast({
+        title: `Reservation request has been made to Table ${tableNumber}.`,
+        description:
+          'Please settle the payment within 10 minutes to confirm reservation, otherwise request will be auto deleted.',
+      });
       setIsLoading(false);
-      router.refresh();
-      // router.push('/')
     }
   }
-  // should I make this component a server component ?
-  console.log({ date });
+
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <DatePicker
           date={date}
           setDate={handleDate}
@@ -172,13 +174,7 @@ export default function BookReservation({ tableNumber, amount, setAmount }) {
               <SelectValue placeholder="Select a start time" />
             </SelectTrigger>
             <SelectContent>
-              {startTime.map((time, index) => {
-                // if (
-                //   DateTime.fromISO(date).weekday >= 6 &&
-                //   (index === 0 || index === 11)
-                // ) {
-                //   return null;
-                // }
+              {startTime.map((time) => {
                 return (
                   <SelectItem
                     key={time}
@@ -217,13 +213,7 @@ export default function BookReservation({ tableNumber, amount, setAmount }) {
               <SelectValue placeholder="Select an end time" />
             </SelectTrigger>
             <SelectContent>
-              {endTime.map((time, index) => {
-                // if (
-                //   DateTime.fromISO(date).weekday >= 6 &&
-                //   (index === 0 || index === 11)
-                // ) {
-                //   return null;
-                // }
+              {endTime.map((time) => {
                 return (
                   <SelectItem
                     key={time}
@@ -243,13 +233,6 @@ export default function BookReservation({ tableNumber, amount, setAmount }) {
           <Button
             disabled={!date || !start || !end || isLoading}
             type="submit" // need to add this and the asChild on the `DrawerClose` above.
-            onClick={() => {
-              toast({
-                title: `Reservation request has been made.`,
-                description:
-                  'Please settle the payment within 10 minutes to confirm reservation, otherwise request will be auto deleted.',
-              });
-            }}
           >
             Submit
           </Button>
@@ -276,8 +259,6 @@ const startTime = [
   '03:00 PM',
   '04:00 PM',
   '05:00 PM',
-  // '06:00 PM',
-  // '07:00 PM',
 ];
 const endTime = [
   '09:00 AM',
@@ -290,8 +271,6 @@ const endTime = [
   '04:00 PM',
   '05:00 PM',
   '06:00 PM',
-  // '07:00 PM',
-  // '08:00 PM',
 ];
 
 const rate = [45, 85, 130, 175, 215, 260, 305, 350];

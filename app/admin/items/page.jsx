@@ -37,21 +37,23 @@ export default async function Items() {
   const items = await getItems();
 
   return (
-    <div>
+    <div className="container mx-auto px-4 py-10">
       <AddItem />
-      {items.map(
-        ({ name, image_url, is_available, description, point_cost, id }) => (
-          <ItemCard
-            key={id}
-            id={id}
-            name={name}
-            imageUrl={image_url}
-            isAvailable={is_available}
-            description={description}
-            pointsCost={point_cost}
-          />
-        )
-      )}
+      <div className="flex gap-4 p-4 m-4 flex-col lg:flex-row flex-wrap justify-center">
+        {items.map(
+          ({ name, image_url, is_available, description, point_cost, id }) => (
+            <ItemCard
+              key={id}
+              id={id}
+              name={name}
+              imageUrl={image_url}
+              isAvailable={is_available}
+              description={description}
+              pointsCost={point_cost}
+            />
+          )
+        )}
+      </div>
     </div>
   );
 }

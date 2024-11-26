@@ -26,27 +26,27 @@ import { useState } from 'react';
 export default function TableStatus({ tableNumber, isOccupied }) {
   const [amount, setAmount] = useState(null);
   return (
-    <Card>
+    <Card className="flex flex-col px-2">
       <CardHeader>
-        <CardTitle>Table {tableNumber}</CardTitle>
+        <CardTitle className="text-xl text-center">
+          Table {tableNumber}
+        </CardTitle>
       </CardHeader>
-      {/* <CardContent>
-        <p>Card Content</p>
-      </CardContent> */}
-      <CardFooter>
+      <CardContent className="text-center">
         <p>{isOccupied ? '🔴 Occupied' : '🟢 Available'}</p>
-        {/* <Button>Reserve</Button> */}
+      </CardContent>
+      <CardFooter>
         <Drawer>
           <DrawerTrigger asChild>
-            <Button>Reserve</Button>
+            <Button className="flex-grow">Reserve</Button>
           </DrawerTrigger>
-          <DrawerContent>
+          <DrawerContent className="flex flex-col items-center">
             <DrawerHeader>
-              <DrawerTitle>
+              <DrawerTitle className="text-center">
                 Pick a date to reserve Table {tableNumber}{' '}
                 {amount && `— Total amount to pay is ₱${amount}`}
               </DrawerTitle>
-              <DrawerDescription>
+              <DrawerDescription className="text-center">
                 Payment is via Gcash. Reservation expires after 10 minutes not
                 being paid.
               </DrawerDescription>
@@ -57,10 +57,10 @@ export default function TableStatus({ tableNumber, isOccupied }) {
               setAmount={setAmount}
             />
             <DrawerFooter>
-              {/* <Button>Submit</Button> */}
-              <DrawerClose>
-                Cancel
-                {/* <Button variant="outline">Cancel</Button> */}
+              <DrawerClose asChild>
+                <Button variant="outline" className="w-[280px] mb-10">
+                  Cancel
+                </Button>
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>

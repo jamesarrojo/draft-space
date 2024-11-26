@@ -1,0 +1,71 @@
+'use client';
+
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import Image from 'next/image';
+export default function ImagesCarousel() {
+  return (
+    <Carousel className="mb-48">
+      <CarouselContent>
+        {images.map((i) => (
+          <CarouselItem key={i} className="pl-1 md:basis-1/2 lg:basis-1/3">
+            <Image
+              src={`/renders/${i}.webp`}
+              alt={i}
+              width={1320}
+              height={930}
+              quality={100}
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
+  );
+}
+
+const images = [
+  'DRAFTINGROOMRENDERINGS_Image_20240826_220840',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_221107',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_221254',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_221426',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_222807',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_230515',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_230642',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_231907',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_232028',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_232436',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_232550',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_232704',
+  'DRAFTINGROOMRENDERINGS_Image_20240826_232821',
+  'EXTERIORPERSPECTIVE_Image_20240826_153718',
+  'EXTERIORPERSPECTIVE_Image_20240826_212842',
+  'EXTERIORPERSPECTIVE_Image_20240914_000155',
+  'EXTERIORPERSPECTIVE_Image_20240914_000250',
+  'LOBBYRENDERINGS_Image_20240913_232135',
+  'LOBBYRENDERINGS_Image_20240913_232413',
+  'LOBBYRENDERINGS_Image_20240913_232553',
+  'LOBBYRENDERINGS_Image_20240913_232925',
+  'LOBBYRENDERINGS_Image_20240913_233120',
+  'OTHERRENDERS_Image_20240826_233956',
+  'OTHERRENDERS_Image_20240826_234201',
+  'OTHERRENDERS_Image_20240826_234504',
+  'OTHERRENDERS_Image_20240826_234646',
+  'OTHERRENDERS_Image_20240826_234746',
+  'OTHERRENDERS_Image_20240826_234938',
+  'OTHERRENDERS_Image_20240826_235051',
+  'OTHERRENDERS_Image_20240826_235323',
+  'OTHERRENDERS_Image_20240826_235429',
+  'OTHERRENDERS_Image_20240913_233621',
+  'OTHERRENDERS_Image_20240913_233802',
+  'OTHERRENDERS_Image_20240913_233907',
+  'OTHERRENDERS_Image_20240913_234037',
+  'OTHERRENDERS_Image_20240913_234205',
+  'OTHERRENDERS_Image_20240913_234319',
+];

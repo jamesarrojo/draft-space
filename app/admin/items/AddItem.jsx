@@ -65,11 +65,11 @@ export default function AddItem() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button>New Item</Button>
+        <Button className="mb-4">New Item</Button>
       </SheetTrigger>
       <SheetContent side="left">
         <form onSubmit={handleSubmit}>
-          <SheetHeader>
+          <SheetHeader className="gap-2 mb-8">
             <SheetTitle>Add new item</SheetTitle>
             <SheetDescription>
               This will add a new redeemable item for students.
@@ -105,7 +105,7 @@ export default function AddItem() {
               required={true}
             />
           </SheetHeader>
-          <SheetFooter>
+          <SheetFooter className="sm:justify-start">
             <SheetClose asChild>
               <Button
                 disabled={!name || !imageUrl || !description || !pointsCost}

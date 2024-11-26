@@ -56,8 +56,7 @@ export default function ItemCard({
 
     const { error } = await res.json();
     if (error) {
-      console.error(error.message);
-      setErrorMsg(error.message.slice(0, 27));
+      setErrorMsg(error.slice(0, 27));
       setIsLoading(false);
       return;
     }
@@ -75,18 +74,24 @@ export default function ItemCard({
     }
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <Card>
+    <form onSubmit={handleSubmit} className="justify-self-stretch self-stretch">
+      <Card className="lg:max-w-72">
         <CardHeader>
           <CardTitle>{name}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <img src={imageUrl} width={150} height={150} alt={description} />
+          <img
+            src={imageUrl}
+            width={150}
+            height={150}
+            alt={description}
+            className="max-h-36 w-auto mx-auto"
+          />
 
           <p>Points Cost: {pointsCost}</p>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col gap-2">
           <Input
             className={
               errorMsg &&
@@ -96,6 +101,7 @@ export default function ItemCard({
             placeholder="Points Cost"
             value={quantity}
             min={0}
+            max={1000}
             onChange={(e) => {
               setQuantity(+e.target.value);
               setTotalCost(+e.target.value * pointsCost);
@@ -103,13 +109,17 @@ export default function ItemCard({
             }}
             required={true}
           />
-          <Button type="submit" disabled={quantity === 0 || isLoading}>
+          <Button
+            type="submit"
+            disabled={quantity === 0 || isLoading}
+            className="self-stretch"
+          >
             Submit
           </Button>
-          <p className={errorMsg && 'text-red-600'}>
-            {quantity > 0 &&
-              `Total points cost is ${quantity} x ${pointsCost} = ${totalCost}`}{' '}
-            {errorMsg && errorMsg}
+          <p className={`text-xs ${errorMsg && 'text-red-600'}`}>
+            {quantity > 0 && !errorMsg
+              ? `Total points cost is ${quantity} x ${pointsCost} = ${totalCost}`
+              : errorMsg && errorMsg}
           </p>
         </CardFooter>
       </Card>

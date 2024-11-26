@@ -54,7 +54,7 @@ export default async function RedeemItems() {
   const items = await getItems();
 
   return (
-    <div>
+    <div className="flex gap-4 p-4 m-4 flex-col lg:flex-row flex-wrap justify-center">
       {items.map(({ name, image_url, description, point_cost, id }) => (
         <ItemCard
           studentId={studentId}

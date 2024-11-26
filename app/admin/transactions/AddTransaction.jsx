@@ -125,11 +125,11 @@ export default function AddTransaction() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button>New Transaction</Button>
+        <Button className="mb-4">New Transaction</Button>
       </SheetTrigger>
       <SheetContent side="left">
         <form onSubmit={handleSubmit}>
-          <SheetHeader>
+          <SheetHeader className="gap-2 mb-8">
             <SheetTitle>
               Add new transaction{' '}
               {amount ? `— Total amount is ₱${amount}.00` : null}
@@ -145,7 +145,7 @@ export default function AddTransaction() {
               }}
               value={tableNumber}
             >
-              <SelectTrigger className="w-[280px]">
+              <SelectTrigger>
                 <SelectValue placeholder="Select available table" />
               </SelectTrigger>
               <SelectContent>
@@ -164,7 +164,7 @@ export default function AddTransaction() {
               }}
               value={student}
             >
-              <SelectTrigger className="w-[280px]">
+              <SelectTrigger>
                 <SelectValue placeholder="Select student" />
               </SelectTrigger>
               <SelectContent>
@@ -188,7 +188,7 @@ export default function AddTransaction() {
               }}
               value={hours}
             >
-              <SelectTrigger className="w-[280px]">
+              <SelectTrigger>
                 <SelectValue placeholder="Select number of hours" />
               </SelectTrigger>
               <SelectContent>
@@ -212,7 +212,7 @@ export default function AddTransaction() {
               </SelectContent>
             </Select>
           </SheetHeader>
-          <SheetFooter>
+          <SheetFooter className="sm:justify-start">
             <SheetClose asChild>
               <Button
                 disabled={!tableNumber || !student || !hours || !amount}

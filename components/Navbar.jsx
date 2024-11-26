@@ -15,7 +15,12 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+} from '@/components/ui/sheet';
 
 import { createClient } from '@/utils/supabase/server';
 import { Button } from './ui/button';
@@ -86,13 +91,17 @@ export default async function Navbar({ user, menuItems }) {
             <NavigationMenuList className="flex flex-col items-start">
               {menuItems.map(({ route, label }) => (
                 <NavigationMenuItem key={route}>
-                  <Link href={route} legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      {label}
-                    </NavigationMenuLink>
-                  </Link>
+                  <SheetClose asChild>
+                    {/* I removed the `legacyBehavior` prop inside the Link component
+                    and the `SheetClose` now works!*/}
+                    <Link href={route} passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        {label}
+                      </NavigationMenuLink>
+                    </Link>
+                  </SheetClose>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>

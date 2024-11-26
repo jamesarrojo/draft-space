@@ -40,20 +40,22 @@ export default async function Feedback() {
   }
 
   const feedback = await getFeedback();
-  console.log(feedback);
-  if (feedback.length === 0) return <p>No Feedback Yet</p>;
+  if (feedback.length === 0)
+    return <p className="text-center mt-8">No Feedback Yet</p>;
   return (
-    <div>
-      {feedback.map(({ id, email, created_at, feedback, is_approved }) => (
-        <FeedbackCard
-          key={id}
-          id={id}
-          email={email}
-          createdAt={created_at}
-          feedback={feedback}
-          isApproved={is_approved}
-        />
-      ))}
+    <div className="container mx-auto px-4 py-10">
+      <div className="flex flex-col gap-4 items-center px-4">
+        {feedback.map(({ id, email, created_at, feedback, is_approved }) => (
+          <FeedbackCard
+            key={id}
+            id={id}
+            email={email}
+            createdAt={created_at}
+            feedback={feedback}
+            isApproved={is_approved}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -31,7 +31,7 @@ export default async function Students() {
   }
   const { data } = await getStudents();
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto px-4 py-10">
       <DataTable data={data} columns={columns} />
     </div>
   );

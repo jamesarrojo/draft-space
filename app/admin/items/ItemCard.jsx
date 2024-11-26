@@ -20,26 +20,36 @@ export default function ItemCard({
   id,
 }) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <img src={imageUrl} width={150} height={150} alt={description} />
-        {isAvailable ? (
-          <Badge>in stock</Badge>
-        ) : (
-          <Badge variant="destructive">out of stock</Badge>
-        )}
-        <p>Points Cost: {pointsCost}</p>
-      </CardContent>
-      <CardFooter>
-        <ToggleAvailability id={id}>
-          {isAvailable ? 'Make Unavailable' : 'Make Available'}
-        </ToggleAvailability>
-        <DeleteItem id={id}>Delete</DeleteItem>
-      </CardFooter>
-    </Card>
+    <div className="justify-self-stretch self-stretch">
+      <Card className="lg:max-w-72">
+        <CardHeader>
+          <CardTitle>{name}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <img
+            src={imageUrl}
+            width={150}
+            height={150}
+            alt={description}
+            className="max-h-36 w-auto mx-auto"
+          />
+          {isAvailable ? (
+            <Badge>in stock</Badge>
+          ) : (
+            <Badge variant="destructive">out of stock</Badge>
+          )}
+          <p>Points Cost: {pointsCost}</p>
+        </CardContent>
+        <CardFooter className="flex gap-2 justify-between">
+          <ToggleAvailability id={id}>
+            {isAvailable ? 'Make Unavailable' : 'Make Available'}
+          </ToggleAvailability>
+          <DeleteItem id={id} className="">
+            Delete
+          </DeleteItem>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }

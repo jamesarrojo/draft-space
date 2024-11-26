@@ -21,9 +21,9 @@ export default function FeedbackCard({
   isApproved,
 }) {
   return (
-    <Card>
+    <Card className="self-stretch mx-4">
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="flex gap-2">
           {isApproved ? (
             <FaRegSmile className="text-green-600" />
           ) : (
@@ -35,7 +35,7 @@ export default function FeedbackCard({
           {DateTime.fromISO(createdAt).toLocaleString(DateTime.DATETIME_FULL)}
         </CardDescription>
       </CardHeader>
-      <CardContent>{feedback}</CardContent>
+      <CardContent className="my-8">{feedback}</CardContent>
       <CardFooter>
         <DeleteFeedback id={id}>Delete</DeleteFeedback>
       </CardFooter>

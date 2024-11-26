@@ -36,7 +36,7 @@ export default function FeedbackForm({ studentId }) {
     setIsLoading(false);
     // I moved the trigger for the toast here
     toast({
-      title: `Your feedback has been sent!.`,
+      title: `Your feedback has been sent!`,
       description: `We read all of the feedback sent to us to help us improve our service.`,
     });
     if (res.status === 200) {
@@ -44,10 +44,19 @@ export default function FeedbackForm({ studentId }) {
     }
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>How do you feel about DraftSpace?</h3>
-      <RadioGroup value={emotion} onValueChange={setEmotion}>
-        <div className="flex items-center space-x-2">
+    <form
+      onSubmit={handleSubmit}
+      className="flex-col max-w-96 mx-auto mt-12 p-4"
+    >
+      <h3 className="text-xl font-bold text-center my-2">
+        How do you feel about DraftSpace?
+      </h3>
+      <RadioGroup
+        value={emotion}
+        onValueChange={setEmotion}
+        className="flex justify-center my-4"
+      >
+        <div className="flex space-x-2">
           <RadioGroupItem className="hidden" value="happy" id="happy" />
           <Label htmlFor="happy">
             <FaRegSmile
@@ -74,8 +83,13 @@ export default function FeedbackForm({ studentId }) {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         disabled={emotion === null}
+        className="my-4 min-h-36"
       />
-      <Button disabled={!emotion || message === '' || isLoading} type="submit">
+      <Button
+        disabled={!emotion || message === '' || isLoading}
+        type="submit"
+        className="w-full"
+      >
         Submit
       </Button>
     </form>
