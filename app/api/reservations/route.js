@@ -72,6 +72,7 @@ export async function DELETE(request) {
       return NextResponse.json({ timeTenMinsAgo, data, error });
     }
     return NextResponse.json({
+      timeTenMinsAgo,
       message: 'No reservations available to delete.',
       error,
     });
