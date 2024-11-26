@@ -86,8 +86,7 @@ export async function POST(request) {
         }
       }
     }
-    console.log('END', Date.now());
-    return NextResponse.json({ data, error });
+    return NextResponse.json({ dateTimeNowStr, data, error });
   }
   const transaction = await request.json();
 
@@ -199,6 +198,6 @@ export async function PUT(request) {
         });
       }
     }
-    return NextResponse.json({ data, error });
+    return NextResponse.json({ dateTimeNowStr, data, error });
   }
 }
