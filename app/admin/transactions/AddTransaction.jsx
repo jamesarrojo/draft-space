@@ -22,13 +22,13 @@ import { DateTime } from 'luxon';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { getCurrentPhilippineTime } from '@/utils/dateTimePhilippines';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function hoursToSixPM() {
   // Get the current time
-  const now = DateTime.local();
-
+  const now = DateTime.local().setZone('Asia/Manila');
   // Set target time to today at 6:00 PM
   const sixPM = now.set({ hour: 18, minute: 0, second: 0, millisecond: 0 });
 
@@ -37,6 +37,19 @@ function hoursToSixPM() {
 
   // Calculate the difference in hours
   const diffInHours = targetTime.diff(now, 'hours').hours;
+
+  return Math.floor(diffInHours);
+}
+
+function hoursToNextStart(current, nextStart) {
+  if (!nextStart) {
+    return null;
+  }
+  const dt1 = DateTime.fromISO(nextStart).setZone('Asia/Manila');
+  const dt2 = DateTime.fromISO(current).setZone('Asia/Manila');
+
+  // Calculate the difference in hours
+  const diffInHours = dt1.diff(dt2, 'hours').hours;
 
   return Math.floor(diffInHours);
 }
@@ -55,6 +68,14 @@ export default function AddTransaction() {
     `${process.env.NEXT_PUBLIC_API_URL}/api/students?role=verified-student`,
     fetcher
   );
+  const {
+    data: nextHour,
+    error: nextHourErr,
+    isLoading: isNextHourLoading,
+  } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/reservations?action=next-hour`,
+    fetcher
+  );
 
   const [tableNumber, setTableNumber] = useState(undefined); //set this to `undefined` instead of `null` so that placeholder text will show in the `SelectValue`. source: https://github.com/shadcn-ui/ui/issues/1529#issuecomment-1721015873
   const [student, setStudent] = useState(undefined);
@@ -62,6 +83,7 @@ export default function AddTransaction() {
   const [studentsArr, setStudentsArr] = useState([]);
   const [hours, setHours] = useState(undefined);
   const [amount, setAmount] = useState(undefined);
+  const [nextStartHour, setNextStartHour] = useState(null);
 
   const { toast } = useToast();
   const router = useRouter();
@@ -118,9 +140,15 @@ export default function AddTransaction() {
   useEffect(() => {
     if (tables) setTablesArr(tables.data); // Set the initial state once data is available
     if (students) setStudentsArr(students.data); // Set the initial state once data is available
-  }, [tables, students]);
+    if (nextHour?.data) setNextStartHour(nextHour.data.start_time); // Set the initial state once data is available
+  }, [tables, students, nextHour]);
 
   const hoursTillSix = hoursToSixPM();
+  const hoursTillNextStart = hoursToNextStart(
+    getCurrentPhilippineTime(),
+    nextStartHour
+  );
+  console.log({ hoursTillNextStart });
   console.log(process.env.NODE_ENV, process.env.NODE_ENV === 'development');
   return (
     <Sheet>
@@ -198,11 +226,15 @@ export default function AddTransaction() {
                       <SelectItem
                         key={hour}
                         value={hour}
+                        // makes sure you only select 1-10 hours so it won't exceed 6PM,
+                        // and makes sure you won't overlap with the next start time reserved.
                         disabled={
                           process.env.NODE_ENV === 'development'
                             ? false
-                            : hoursTillSix < hour || hoursTillSix >= 10
-                        } // makes sure you only select 1-10 hours so it won't exceed 6PM.
+                            : hoursTillSix < hour ||
+                              hoursTillSix >= 10 ||
+                              (hoursTillNextStart && hoursTillNextStart < hour)
+                        }
                       >
                         {hour}
                       </SelectItem>

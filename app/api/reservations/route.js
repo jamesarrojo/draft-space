@@ -35,6 +35,8 @@ export async function GET(request) {
   const searchParams = request.nextUrl.searchParams;
   const date = searchParams.get('date');
   const tableId = searchParams.get('tableId');
+  const action = searchParams.get('action');
+  const dateNowStr = DateTime.now().setZone('Asia/Manila').startOf('day');
   console.log(date, tableId);
   const supabase = createClient();
   if (date && tableId) {
@@ -49,7 +51,18 @@ export async function GET(request) {
     .from('Reservations')
     .select()
     .order('created_at', { ascending: false });
-  console.log('SORTED', data);
+  if (action === 'next-hour') {
+    const { data, error } = await supabase
+      .from('Reservations')
+      .select()
+      .eq('reservation_date', dateNowStr)
+      .eq('is_paid', true)
+      .eq('is_converted', false)
+      .order('start_time', { ascending: true })
+      .limit(1)
+      .single();
+    return NextResponse.json({ dateNowStr, data, error });
+  }
   return NextResponse.json({ data, error });
 }
 
