@@ -20,7 +20,10 @@ export default async function PleaseVerify() {
     .single();
 
   // redirect to this route if account is a student and is verified
-  if (user?.role === 'student' && user?.is_verified) {
+  if (
+    (user?.role === 'student' || user?.role === 'admin') &&
+    user?.is_verified
+  ) {
     redirect('/');
   }
   return (
