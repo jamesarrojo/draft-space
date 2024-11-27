@@ -44,7 +44,8 @@ export default async function RedeemItems() {
     const { data, error } = await supabase
       .from('Redeemable_Items')
       .select()
-      .eq('is_available', true);
+      .eq('is_available', true)
+      .order('name', { ascending: true });
     if (error) {
       return error;
     }

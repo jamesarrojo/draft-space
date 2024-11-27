@@ -27,7 +27,10 @@ export default async function Items() {
 
   async function getItems() {
     const supabase = createClient();
-    const { data, error } = await supabase.from('Redeemable_Items').select();
+    const { data, error } = await supabase
+      .from('Redeemable_Items')
+      .select()
+      .order('name', { ascending: true });
     if (error) {
       return error;
     }
