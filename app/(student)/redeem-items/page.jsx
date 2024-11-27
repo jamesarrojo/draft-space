@@ -52,7 +52,13 @@ export default async function RedeemItems() {
   }
 
   const items = await getItems();
-
+  if (items.length === 0) {
+    return (
+      <p className="text-center font-bold text-2xl mt-48 px-8">
+        Items are only available on the 1st to 25th of the month.
+      </p>
+    );
+  }
   return (
     <div className="flex gap-4 p-4 m-4 flex-col lg:flex-row flex-wrap justify-center">
       {items.map(({ name, image_url, description, point_cost, id }) => (
